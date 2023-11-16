@@ -213,6 +213,7 @@ class DaysWidget extends StatelessWidget {
 
   Widget _beauty(BuildContext context, DayValues values) {
     BorderRadiusGeometry? borderRadius;
+    bool isDaySelected = false;
     Color bgColor = Colors.transparent;
     TextStyle txtStyle =
         (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
@@ -227,24 +228,12 @@ class DaysWidget extends StatelessWidget {
     );
 
     if (values.isSelected) {
-      if (values.isFirstDayOfWeek) {
-        borderRadius = BorderRadius.only(
-          topLeft: Radius.circular(radius),
-          bottomLeft: Radius.circular(radius),
-        );
-      } else if (values.isLastDayOfWeek) {
-        borderRadius = BorderRadius.only(
-          topRight: Radius.circular(radius),
-          bottomRight: Radius.circular(radius),
-        );
-      }
-
       if ((values.selectedMinDate != null &&
               values.day.isSameDay(values.selectedMinDate!)) ||
           (values.selectedMaxDate != null &&
               values.day.isSameDay(values.selectedMaxDate!))) {
-        bgColor =
-            selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
+        bgColor = selectedBackgroundColor ??
+            Theme.of(context).colorScheme.primary.withOpacity(.3);
         txtStyle =
             (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
           color: selectedBackgroundColor != null
@@ -257,18 +246,35 @@ class DaysWidget extends StatelessWidget {
 
         if (values.selectedMinDate == values.selectedMaxDate) {
           borderRadius = BorderRadius.circular(radius);
+          isDaySelected = true;
         } else if (values.selectedMinDate != null &&
             values.day.isSameDay(values.selectedMinDate!)) {
-          borderRadius = BorderRadius.only(
-            topLeft: Radius.circular(radius),
-            bottomLeft: Radius.circular(radius),
-          );
+          isDaySelected = true;
+          if ((values.selectedMaxDate == null &&
+                  values.selectedMinDate != null) ||
+              (values.selectedMaxDate != null &&
+                  values.selectedMinDate == null)) {
+            borderRadius = BorderRadius.circular(radius);
+          } else {
+            borderRadius = BorderRadius.only(
+              topLeft: Radius.circular(radius),
+              bottomLeft: Radius.circular(radius),
+            );
+          }
         } else if (values.selectedMaxDate != null &&
             values.day.isSameDay(values.selectedMaxDate!)) {
-          borderRadius = BorderRadius.only(
-            topRight: Radius.circular(radius),
-            bottomRight: Radius.circular(radius),
-          );
+          if ((values.selectedMaxDate == null &&
+                  values.selectedMinDate != null) ||
+              (values.selectedMaxDate != null &&
+                  values.selectedMinDate == null)) {
+            borderRadius = BorderRadius.circular(radius);
+          } else {
+            borderRadius = BorderRadius.only(
+              topRight: Radius.circular(radius),
+              bottomRight: Radius.circular(radius),
+            );
+          }
+          isDaySelected = true;
         }
       } else {
         bgColor = selectedBackgroundColorBetween ??
@@ -301,10 +307,21 @@ class DaysWidget extends StatelessWidget {
         color: bgColor,
         borderRadius: borderRadius,
       ),
-      child: Text(
-        values.text,
-        textAlign: TextAlign.center,
-        style: txtStyle,
+      clipBehavior: Clip.hardEdge,
+      child: Container(
+        decoration: isDaySelected
+            ? BoxDecoration(
+                color: selectedBackgroundColorBetween ??
+                    Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(100))
+            : null,
+        child: Center(
+          child: Text(
+            values.text,
+            textAlign: TextAlign.center,
+            style: txtStyle,
+          ),
+        ),
       ),
     );
   }

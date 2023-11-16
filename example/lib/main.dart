@@ -65,6 +65,7 @@ class MyApp extends StatelessWidget {
           calendarController: calendarController,
           layout: Layout.BEAUTY,
           calendarCrossAxisSpacing: 0,
+          dayRadius: 50,
         ),
       ),
     );

@@ -1,1 +1,1 @@
-enum Layout { DEFAULT, BEAUTY }
+enum Layout { DEFAULT, BEAUTY, MATERIAL_DESIGN }

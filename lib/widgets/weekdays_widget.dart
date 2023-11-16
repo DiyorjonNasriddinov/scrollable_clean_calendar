@@ -40,7 +40,8 @@ class WeekdaysWidget extends StatelessWidget {
 
         return <Layout, Widget Function()>{
           Layout.DEFAULT: () => _pattern(context, weekDay),
-          Layout.BEAUTY: () => _beauty(context, weekDay)
+          Layout.BEAUTY: () => _beauty(context, weekDay),
+          Layout.MATERIAL_DESIGN: () => _materialDesign(context, weekDay),
         }[layout]!();
       }),
     );
@@ -64,6 +65,23 @@ class WeekdaysWidget extends StatelessWidget {
   }
 
   Widget _beauty(BuildContext context, String weekday) {
+    return Center(
+      child: Text(
+        weekday.capitalize(),
+        style: textStyle ??
+            Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .color!
+                      .withOpacity(.4),
+                  fontWeight: FontWeight.bold,
+                ),
+      ),
+    );
+  }
+
+  Widget _materialDesign(BuildContext context, String weekday) {
     return Center(
       child: Text(
         weekday.capitalize(),
